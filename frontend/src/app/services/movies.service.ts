@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment'; // <-- Importar environment
 
 export interface Movie {
   id?: number;
@@ -9,15 +10,16 @@ export interface Movie {
   synopsis?: string;
   cover?: string;
   year?: number;
-  trailer_url?: string; // <-- Agrega 
+  trailer_url?: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class MoviesService {
- private apiUrl = 'https://myappmovie-production.up.railway.app/api/movies';
 
+  // 🔹 Usar la URL desde environment
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -29,34 +31,31 @@ export class MoviesService {
     return this.http.get<Movie>(`${this.apiUrl}/${id}`);
   }
 
-  // Crear una nueva película
   addMovie(movie: Movie): Observable<Movie> {
     return this.http.post<Movie>(this.apiUrl, movie);
   }
 
-  // Actualizar una película existente
   updateMovie(id: number, movie: Movie): Observable<Movie> {
     return this.http.put<Movie>(`${this.apiUrl}/${id}`, movie);
   }
 
-  // Eliminar una película
   deleteMovie(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  // ✅ Nuevo método para enviar FormData al backend (con imagen incluida)
+  // 🔹 FormData para enviar imagen
   addMovieFormData(formData: FormData): Observable<Movie> {
     return this.http.post<Movie>(this.apiUrl, formData);
   }
 
-   // Actualizar película con FormData (imagen incluida) usando POST + _method=PUT
   updateMovieFormData(id: number, formData: FormData): Observable<Movie> {
-    formData.append('_method', 'PUT'); // Esto evita el error 422 con multipart/form-data
+    formData.append('_method', 'PUT');
     return this.http.post<Movie>(`${this.apiUrl}/${id}`, formData);
   }
-   // Genera la URL completa de la imagen desde Railway
+
+  // 🔹 Genera URL completa de la portada usando environment
   getCoverUrl(cover?: string): string {
     if (!cover) return '';
-    return `https://myappmovie-production.up.railway.app/Assets/${cover}`;
+    return `${environment.assetsUrl}/${cover}`;
   }
 }
