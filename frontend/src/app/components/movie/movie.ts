@@ -74,4 +74,13 @@ export class MovieComponent implements OnInit {
       });
     }
   }
+  // ✅ NUEVO: Método para generar URL completa de portada en producción
+  getCoverUrl(cover?: string): string {
+  if (!cover) return '';
+  return this.moviesService.getCoverUrl(cover);
 }
+
+  
+  
+}
+

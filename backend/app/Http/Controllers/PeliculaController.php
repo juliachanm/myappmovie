@@ -10,13 +10,26 @@ class PeliculaController extends Controller
     // Mostrar todas las películas
     public function index()
     {
-        return Movie::all();
+        $movies = Movie::all();
+
+        // Ajustar ruta de portada para producción
+        foreach ($movies as $movie) {
+            if ($movie->cover) {
+                $movie->cover = '/assets/' . basename($movie->cover);
+            }
+        }
+
+        return response()->json($movies);
     }
 
     // Mostrar una película específica
     public function show($id)
     {
-        return Movie::find($id);
+        $movie = Movie::find($id);
+        if ($movie && $movie->cover) {
+            $movie->cover = '/assets/' . basename($movie->cover);
+        }
+        return response()->json($movie);
     }
 
     // Almacenar una nueva película
@@ -29,7 +42,7 @@ class PeliculaController extends Controller
             'synopsis' => 'nullable|string',
             'cover' => 'nullable|file|mimes:jpg,jpeg,png,gif|max:2048',
             'year' => 'nullable|integer',
-            'trailer_url' => 'nullable|url', // <-- Agregar validación del trailer
+            'trailer_url' => 'nullable|url',
         ]);
 
         // Crear la película
@@ -39,9 +52,9 @@ class PeliculaController extends Controller
         if ($request->hasFile('cover')) {
             $file = $request->file('cover');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads'), $filename);
-            $movie->cover = 'uploads/' . $filename;
-            $movie->save(); // guardar cambios
+            $file->move(public_path('assets'), $filename); // Guardar en public/assets
+            $movie->cover = '/assets/' . $filename;        // Ruta relativa para Angular
+            $movie->save();
         }
 
         return response()->json($movie, 201);
@@ -57,9 +70,9 @@ class PeliculaController extends Controller
             'title' => 'required|string|max:255',
             'director' => 'nullable|string|max:255',
             'synopsis' => 'nullable|string',
-            'cover' => 'nullable|file|mimes:jpg,jpeg,png,gif|max:2048', // 👈 cambiar a file
+            'cover' => 'nullable|file|mimes:jpg,jpeg,png,gif|max:2048',
             'year' => 'nullable|integer',
-            'trailer_url' => 'nullable|url', // <-- nuevo campo para trailer
+            'trailer_url' => 'nullable|url',
         ]);
 
         // Actualizar campos
@@ -67,15 +80,14 @@ class PeliculaController extends Controller
         $movie->director = $request->director;
         $movie->synopsis = $request->synopsis;
         $movie->year = $request->year;
-        $movie->trailer_url = $request->trailer_url; // <-- guardar trailer
-
+        $movie->trailer_url = $request->trailer_url;
 
         // Subida de archivo opcional
         if ($request->hasFile('cover')) {
             $file = $request->file('cover');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads'), $filename);
-            $movie->cover = 'uploads/' . $filename;
+            $file->move(public_path('assets'), $filename);
+            $movie->cover = '/assets/' . $filename;
         }
 
         $movie->save();
@@ -86,7 +98,7 @@ class PeliculaController extends Controller
     // Eliminar una película
     public function destroy($id)
     {
-        Movie::destroy($id); // 👈 especificar la clase
+        Movie::destroy($id);
         return response()->json(null, 204);
     }
 }

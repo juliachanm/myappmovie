@@ -1,10 +1,9 @@
 <div *ngIf="movie" class="container mt-5">
   <div class="card shadow-lg rounded-4 overflow-hidden">
     <div class="row g-0">
-      <!-- Portada de la película -->
-      <div class="col-md-4 text-center p-3 bg-light d-flex align-items-center justify-content-center">
+      <!--  CAMBIO: URL de portada para producción -->
         <img *ngIf="movie.cover" 
-             [src]="'http://127.0.0.1:8000/' + movie.cover" 
+             [src]="getCoverUrl(movie.cover)" 
              alt="{{ movie.title }}" 
              class="img-fluid rounded shadow-sm"
              style="max-height: 400px;">

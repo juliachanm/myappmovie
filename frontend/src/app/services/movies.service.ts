@@ -16,7 +16,7 @@ export interface Movie {
   providedIn: 'root'
 })
 export class MoviesService {
- private apiUrl = 'http://127.0.0.1:8000/api/movies';
+ private apiUrl = 'https://myappmovie-production.up.railway.app/api/movies';
 
 
   constructor(private http: HttpClient) {}
@@ -53,5 +53,10 @@ export class MoviesService {
   updateMovieFormData(id: number, formData: FormData): Observable<Movie> {
     formData.append('_method', 'PUT'); // Esto evita el error 422 con multipart/form-data
     return this.http.post<Movie>(`${this.apiUrl}/${id}`, formData);
+  }
+   // Genera la URL completa de la imagen desde Railway
+  getCoverUrl(cover?: string): string {
+    if (!cover) return '';
+    return `https://myappmovie-production.up.railway.app/Assets/${cover}`;
   }
 }
