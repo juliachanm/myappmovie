@@ -3,13 +3,13 @@
 
 use Illuminate\Support\Facades\Route;
 
+// Si quieres que la raíz sirva el frontend
 Route::get('/', function () {
-    return view('welcome');
+    return file_get_contents(public_path('index.html'));
 });
 
-// Ruta para servir la app Angular
-Route::get('/angular/{any?}', function () {
-    return view('angular'); // Blade que carga Angular
-})->where('any', '.*');
-
+// Captura todas las rutas (SPA) excepto las de API
+Route::get('/{any}', function () {
+    return file_get_contents(public_path('index.html'));
+})->where('any', '^(?!api).*$');
 
