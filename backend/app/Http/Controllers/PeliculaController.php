@@ -12,23 +12,16 @@ class PeliculaController extends Controller
     {
         $movies = Movie::all();
 
-        // Ajustar ruta de portada para producción
-        foreach ($movies as $movie) {
-            if ($movie->cover) {
-                $movie->cover = '/assets/' . basename($movie->cover);
-            }
-        }
-
+        // Ya no necesitamos modificar $movie->cover
         return response()->json($movies);
     }
 
     // Mostrar una película específica
     public function show($id)
     {
-        $movie = Movie::find($id);
-        if ($movie && $movie->cover) {
-            $movie->cover = '/assets/' . basename($movie->cover);
-        }
+        $movie = Movie::findOrFail($id);
+
+        // Ya no necesitamos modificar $movie->cover
         return response()->json($movie);
     }
 
@@ -52,8 +45,8 @@ class PeliculaController extends Controller
         if ($request->hasFile('cover')) {
             $file = $request->file('cover');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('assets'), $filename); // Guardar en public/assets
-            $movie->cover = '/assets/' . $filename;        // Ruta relativa para Angular
+            $file->move(public_path('uploads'), $filename); // Guardar en public/uploads
+            $movie->cover = $filename;                       // Guardar solo el nombre
             $movie->save();
         }
 
@@ -86,8 +79,8 @@ class PeliculaController extends Controller
         if ($request->hasFile('cover')) {
             $file = $request->file('cover');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('assets'), $filename);
-            $movie->cover = '/assets/' . $filename;
+            $file->move(public_path('uploads'), $filename); // Guardar en public/uploads
+            $movie->cover = $filename;                       // Guardar solo el nombre
         }
 
         $movie->save();
