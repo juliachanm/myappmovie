@@ -53,7 +53,7 @@ export class MoviesService {
     return this.http.post<Movie>(`${this.apiUrl}/${id}`, formData);
   }
 
-  // 🔹 Genera URL completa de la portada usando environment
+  // ✔ Aquí generamos la URL correcta que apunta a Railway
   getCoverUrl(cover?: string): string {
     if (!cover) return '';
     return `${environment.assetsUrl}/${cover}`;
