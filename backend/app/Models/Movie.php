@@ -20,12 +20,3 @@ class Movie extends Model
 
     public $timestamps = false; // si no tienes created_at / updated_at
 
-   // Accesor para la URL completa de la imagen
-public function getCoverUrlAttribute()
-{
-    if ($this->cover) {
-        return url('uploads/' . $this->cover); // usa directamente lo que está en la DB
-    }
-    return null;
-    }
-} 

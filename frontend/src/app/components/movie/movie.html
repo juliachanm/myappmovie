@@ -1,36 +1,43 @@
-<div *ngIf="movie" class="container mt-5">
-  <div class="card shadow-lg rounded-4 overflow-hidden">
-    <div class="row g-0">
+<div class="container mt-4">
+  <h2 class="text-center mb-3">Catálogo de Películas</h2>
 
-      <!-- Portada de la película -->
-      <div class="col-md-4 text-center p-3 bg-light d-flex align-items-center justify-content-center">
-        <img *ngIf="movie.cover"
-             [src]="getCoverUrl(movie.cover)"
-             alt="{{ movie.title }}"
-             class="img-fluid rounded shadow-sm"
-             style="max-height: 400px;">
-      </div>
+  <div class="mb-3 text-end">
+    <button class="btn btn-success" (click)="addMovie()">Agregar Película</button>
+  </div>
 
-      <!-- Detalles y trailer -->
-      <div class="col-md-8 p-4">
-        <h2 class="fw-bold mb-3 text-primary">{{ movie.title }}</h2>
-        <p><strong>Director:</strong> {{ movie.director }}</p>
-        <p><strong>Año:</strong> {{ movie.year }}</p>
-        <p><strong>Sinopsis:</strong> {{ movie.synopsis }}</p>
-
-        <!-- Trailer embebido responsive -->
-        <div class="ratio ratio-16x9 mt-3" *ngIf="movie.trailer_url">
-          <iframe [src]="getEmbedUrl(movie.trailer_url)" frameborder="0" allowfullscreen></iframe>
-        </div>
-
-        <!-- Botones -->
-        <div class="mt-4 d-flex flex-wrap gap-2">
-          <button class="btn btn-warning flex-grow-1 flex-md-auto" (click)="editMovie(movie.id)">Editar</button>
-          <button class="btn btn-danger flex-grow-1 flex-md-auto" (click)="deleteMovie(movie.id)">Eliminar</button>
-          <a routerLink="/movies" class="btn btn-secondary flex-grow-1 flex-md-auto">Regresar</a>
-        </div>
-      </div>
-
-    </div>
+  <div class="table-responsive shadow rounded">
+    <table class="table table-striped table-hover align-middle">
+      <thead class="table-primary text-dark">
+        <tr>
+          <th>ID</th>
+          <th>Portada</th>
+          <th>Título</th>
+          <th>Director</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let movie of movies">
+          <td>{{ movie.id }}</td>
+          <td>
+            <img 
+              [src]="getCoverUrl(movie.cover)"
+              alt="{{ movie.title }}" 
+              class="img-fluid" 
+              style="max-width: 100px; max-height:150px;" 
+            />
+          </td>
+          <td>
+            <a [routerLink]="['/movies', movie.id]" class="text-primary">{{ movie.title }}</a>
+          </td>
+          <td>{{ movie.director }}</td>
+          <td>
+            <button class="btn btn-info btn-sm me-1" (click)="viewMovie(movie.id)">Ver</button>
+            <button class="btn btn-warning btn-sm me-1" (click)="editMovie(movie.id)">Editar</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteMovie(movie.id)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
