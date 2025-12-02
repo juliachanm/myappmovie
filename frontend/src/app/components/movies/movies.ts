@@ -23,15 +23,10 @@ export class MoviesComponent implements OnInit {
     this.loadMovies(); // cargamos las películas al iniciar
   }
 
-  // Cargar películas desde el backend
+   // Cargar películas desde el backend
   loadMovies(): void {
     this.moviesService.getMovies().subscribe((data: Movie[]) => {
-      this.movies = data.map(movie => ({
-        ...movie,
-        cover: movie.cover 
-          ? this.moviesService.getCoverUrl(movie.cover) 
-          : this.moviesService.getCoverUrl('default-cover.jpg') // fallback
-      }));
+      this.movies = data; // ✅ Ya incluye cover_url desde el backend
     });
   }
 

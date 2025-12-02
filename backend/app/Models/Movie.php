@@ -24,7 +24,7 @@ class Movie extends Model
 public function getCoverUrlAttribute()
 {
     if ($this->cover) {
-        return url($this->cover); // usa directamente lo que está en la DB
+        return url('uploads/' . $this->cover); // usa directamente lo que está en la DB
     }
     return null;
     }

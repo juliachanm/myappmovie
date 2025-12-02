@@ -9,6 +9,7 @@ export interface Movie {
   director?: string;
   synopsis?: string;
   cover?: string;
+  cover_url?: string;
   year?: number;
   trailer_url?: string;
 }

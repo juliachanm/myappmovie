@@ -24,19 +24,14 @@ export class MovieComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-  const id = Number(this.route.snapshot.paramMap.get('id'));
-  this.moviesService.getMovie(id).subscribe({
-    next: (data: Movie) => {
-      this.movie = {
-        ...data,
-        cover: data.cover 
-          ? this.moviesService.getCoverUrl(data.cover)
-          : ''
-      };
-    },
-    error: (err) => console.error('Error al cargar la película', err)
-  });
-}
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.moviesService.getMovie(id).subscribe({
+      next: (data: Movie) => {
+        this.movie = data; // ✅ Ya incluye cover_url desde backend
+      },
+      error: (err) => console.error('Error al cargar la película', err)
+    });
+  }
 
 
   // Función para convertir URL de YouTube a embebido seguro
