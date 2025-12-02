@@ -16,22 +16,18 @@ export class MoviesComponent implements OnInit {
 
   constructor(
     private moviesService: MoviesService,
-    private router: Router
+    private router: Router // <-- Inyectamos Router
   ) {}
 
   ngOnInit(): void {
-    this.loadMovies();
+    this.loadMovies(); // cargamos las películas al iniciar
   }
 
+   // Cargar películas desde el backend
   loadMovies(): void {
     this.moviesService.getMovies().subscribe((data: Movie[]) => {
-      this.movies = data;
+      this.movies = data; // ✅ Ya incluye cover_url desde el backend
     });
-  }
-
-  // 🔹 NUEVO: generar URL correcta desde Angular
-  getCoverUrl(cover?: string): string {
-    return this.moviesService.getCoverUrl(cover);
   }
 
   viewMovie(id: number | undefined): void {
@@ -53,7 +49,7 @@ export class MoviesComponent implements OnInit {
   deleteMovie(id: number | undefined): void {
     if (id !== undefined && confirm('¿Deseas eliminar esta película?')) {
       this.moviesService.deleteMovie(id).subscribe(() => {
-        this.loadMovies();
+        this.loadMovies(); // recarga la lista después de eliminar
       });
     }
   }
