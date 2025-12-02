@@ -28,4 +28,4 @@ public function getCoverUrlAttribute()
     }
     return null;
     }
-
+} 
